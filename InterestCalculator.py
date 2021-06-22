@@ -6,7 +6,11 @@ def main():
         t = getT()
         r = getR()
         comp = getComp()
-        output = calculate(c , t , r , comp)
+        mode = getMode()
+        if mode == False:
+            output = calculate(c , t , r , comp)
+        else:
+            output = dCalculate(c , t , r , comp)
         print("Your resulting value is:\n" + str(output) + "\n")
 
 
@@ -14,7 +18,7 @@ def main():
 
 def getC():
     c = input("Please input your starting amount:\n")
-    if not(str(c).isdigit()):
+    if not isFloat(c):
         print("Don't try to break my fucking program")
         getC()
     return float(c)
@@ -22,7 +26,7 @@ def getC():
 
 def getT():
     t = input("How long (in years) would you like interest to accrue for?\n")
-    if not (str(t).isdigit()):
+    if not isFloat(t):
         print("Don't try to break my fucking program")
         getT()
     return float(t)
@@ -30,7 +34,7 @@ def getT():
 
 def getR():
     r = input("Please input the nominal interest rate (Decimal):\n")
-    if not (str(r).isdigit()):
+    if not isFloat(r):
         print("Don't try to break my fucking program")
         getR()
     return float(r)
@@ -44,6 +48,18 @@ def getComp():
     return comp
 
 
+def getMode():
+    mode = input("Would you like to switch into DCA mode? (y/n)\n")
+    if mode == "y":
+        return True
+    if mode == "n":
+        return False
+    else:
+        print("Don't try to break my fucking program")
+        getMode()
+
+
+
 
 def calculate(c , t , r ,comp):
     if comp == "q":
@@ -53,8 +69,30 @@ def calculate(c , t , r ,comp):
     if comp == "m":
         return c*(1+(r/12))**(12*t)
 
-#comment
 
+def dCalculate(c , t , r , comp):
+    tot = 0
+    if comp == "q":
+        n = 4
+    elif comp == "a":
+        n = 1
+    elif comp == "m":
+        n = 12
+    numTimes = n*t
+    time = 1
+    while time <= numTimes:
+        tot += c/numTimes
+        tot = tot*(1+r/n)
+        time += 1
+    return tot
+
+
+def isFloat(num):
+    try:
+        float(num)
+        return True
+    except ValueError:
+        return False
 #Interest = C(1+(r/n))^(nt)
 #n = number of times compounded per time t
 #t = number of years in this case
